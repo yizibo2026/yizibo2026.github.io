@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>头像大全 · 博布创造</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#0a0a14;color:#eee}
+
+/* 页面容器 */
+.slider{display:flex;height:100vh;width:2000vw;transition:transform .5s ease}
+
+/* 每一章 */
+.chapter{width:100vw;height:100vh;display:flex;flex-direction:column;padding:20px 16px 80px;position:relative;flex-shrink:0}
+.chapter h2{font-size:24px;font-weight:700;margin-bottom:4px;letter-spacing:2px}
+.chapter .desc{font-size:13px;color:#888;margin-bottom:14px}
+
+/* 横排头像区 */
+.row{display:flex;gap:12px;overflow-x:auto;padding-bottom:10px;-webkit-overflow-scrolling:touch;flex:1}
+.row::-webkit-scrollbar{height:4px}
+.row::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+
+/* 单个头像卡片 */
+.card{position:relative;flex-shrink:0;width:140px;height:180px;border-radius:12px;overflow:hidden;background:#16162a;cursor:pointer}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card .overlay{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:.2s;display:flex;align-items:center;justify-content:center}
+.card:hover .overlay,.card:active .overlay{opacity:1}
+.card .overlay span{background:rgba(233,69,96,.9);color:#fff;padding:6px 12px;border-radius:20px;font-size:12px}
+
+/* 下载按钮 */
+.card .dl{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:none;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;opacity:0;transition:.2s}
+.card:hover .dl,.card:active .dl{opacity:1}
+.card .dl:active{background:#e94560}
+
+/* 顶部栏 */
+.topbar{position:fixed;top:0;left:0;right:0;height:50px;background:rgba(10,10,20,.9);backdrop-filter:blur(10px);display:flex;align-items:center;padding:0 16px;z-index:20;gap:10px}
+.topbar h1{font-size:16px;font-weight:700;background:linear-gradient(90deg,#e94560,#f4a261);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+.topbar input{flex:1;padding:6px 12px;border-radius:16px;border:none;background:#1a1a2e;color:#eee;font-size:13px;outline:none;max-width:160px}
+
+/* 左右翻页按钮 */
+.nav-btn{position:fixed;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:rgba(233,69,96,.7);color:#fff;border:none;font-size:20px;z-index:15;cursor:pointer;display:none}
+.nav-btn.left{left:10px}
+.nav-btn.right{right:10px}
+@media(min-width:768px){.nav-btn{display:flex;align-items:center;justify-content:center}}
+
+/* 底部 */
+.footer{position:fixed;bottom:0;left:0;right:0;text-align:center;padding:10px;font-size:12px;color:#777;background:rgba(10,10,20,.9);z-index:20;line-height:1.8}
+.footer span{color:#e94560}
+
+/* 圆点指示器 */
+.dots{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:20}
+.dot{width:7px;height:7px;border-radius:50%;background:#333;transition:.3s}
+.dot.active{background:#e94560;width:18px;border-radius:4px}
+
+/* 提示 */
+#tip{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#e94560;color:#fff;padding:8px 16px;border-radius:20px;font-size:13px;display:none;z-index:30}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>头像大全</h1>
+  <input id="search" placeholder="搜索章节，如：伤感">
+</div>
+
+<div class="slider" id="slider"></div>
+
+<button class="nav-btn left" onclick="go(-1)">‹</button>
+<button class="nav-btn right" onclick="go(1)">›</button>
+
+<div class="dots" id="dots"></div>
+
+<div class="footer">
+  创造师：<span>马文博</span> ｜ 见证人：<span>梁诗涵</span> ｜ 2026年8月17日 剧情了
+</div>
+
+<div id="tip">已复制链接</div>
+
+<script>
+const CDN="https://source.unsplash.com/featured/300x400?";
+const chapters=[
+  {name:"伤感男头",kw:"sad boy portrait face",n:120},
+  {name:"伤感女头",kw:"sad girl portrait face",n:120},
+  {name:"幸福文案头",kw:"happy couple smiling",n:120},
+  {name:"深夜emo",kw:"lonely night street dark",n:120},
+  {name:"孤独背影",kw:"lonely back silhouette",n:120},
+  {name:"分手快乐",kw:"rain window tear sad",n:120},
+  {name:"治愈系",kw:"warm smile sunshine",n:120},
+  {name:"霸气男头",kw:"cool man serious portrait",n:120},
+  {name:"清纯女头",kw:"pure girl natural portrait",n:120},
+  {name:"情侣头像",kw:"couple love portrait",n:120},
+  {name:"黑白伤感",kw:"black white sad portrait",n:120},
+  {name:"雨中撑伞",kw:"umbrella rain street",n:120},
+  {name:"抽烟沉思",kw:"smoking thinking dark",n:120},
+  {name:"低头不语",kw:"head down silent portrait",n:120},
+  {name:"微笑带泪",kw:"smile cry portrait",n:120},
+  {name:"夕阳剪影",kw:"sunset silhouette back",n:120},
+  {name:"车窗风景",kw:"car window landscape",n:120},
+  {name:"手写文案",kw:"handwriting journal aesthetic",n:120},
+  {name:"个性签名",kw:"aesthetic text overlay portrait",n:120},
+  {name:"其他",kw:"portrait aesthetic mood",n:120}
+];
+
+let cur=0;
+const slider=document.getElementById('slider'),dots=document.getElementById('dots'),tip=document.getElementById('tip');
+
+/* 渲染所有章节 */
+chapters.forEach((ch,i)=>{
+  const sec=document.createElement('div');sec.className='chapter';
+  sec.innerHTML=`<h2>${ch.name}</h2><div class="desc">${ch.n}张真人头像 · 点击复制链接 · 长按保存</div><div class="row" id="row${i}"></div>`;
+  slider.appendChild(sec);
+  const row=sec.querySelector('.row');
+  for(let j=0;j<ch.n;j++){
+    const card=document.createElement('div');card.className='card';
+    const url=CDN+encodeURIComponent(ch.kw)+`&sig=${i}_${j}`;
+    card.innerHTML=`
+      <img src="${url}" loading="lazy" alt="${ch.name}">
+      <button class="dl" onclick="event.stopPropagation();downloadImg('${url}','${ch.name}_${j+1}.jpg')">⬇</button>
+      <div class="overlay"><span>点击复制</span></div>
+    `;
+    card.onclick=()=>{navigator.clipboard.writeText(url);showTip()};
+    card.oncontextmenu=e=>{e.preventDefault();downloadImg(url,`${ch.name}_${j+1}.jpg`)};
+    row.appendChild(card);
+  }
+  /* 圆点 */
+  const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>goTo(i);dots.appendChild(d);
+});
+
+/* 翻页 */
+function goTo(i){cur=i;slider.style.transform=`translateX(-${i*100}vw)`;dots.querySelectorAll('.dot').forEach((d,idx)=>d.classList.toggle('active',idx===i))}
+function go(d){let n=cur+d;if(n<0)n=0;if(n>=chapters.length)n=chapters.length-1;goTo(n)}
+
+/* 键盘 */
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(-1);if(e.key==='ArrowRight')go(1)});
+
+/* 触摸滑动 */
+let sx=0;
+document.addEventListener('touchstart',e=>sx=e.touches[0].clientX);
+document.addEventListener('touchend',e=>{let dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60){dx<0?go(1):go(-1)}});
+
+/* 搜索 */
+document.getElementById('search').oninput=function(){
+  const q=this.value.trim().toLowerCase();
+  if(!q)return;
+  const idx=chapters.findIndex(c=>c.name.includes(q));
+  if(idx>=0)goTo(idx);
+};
+
+/* 下载 */
+function downloadImg(url,name){
+  fetch(url).then(r=>r.blob()).then(b=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(b);a.download=name;a.click();
+  }).catch(()=>{window.open(url,'_blank')});
+}
+
+/* 提示 */
+function showTip(){tip.style.display='block';setTimeout(()=>tip.style.display='none',1200)}
+</script>
+</body>
+</html>
