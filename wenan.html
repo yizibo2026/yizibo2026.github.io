@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>那些百度搜不到的文案</title>
+<meta name="description" content="全网最全文案合集，一字博马文博发行">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi6YKj5Lqb55m+5bqm5pCc5LiN5Yiw55qE5paH5qGIiLCJzaG9ydF9uYW1lIjoi5pCc5LiN5Yiw55qE5paH5qGIiwiYmVnaW5fdXJsIjoiLi8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMGYwZjFhIiwidGhlbWVfY29sb3IiOiIjMWExYTJlIiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbCwiZmlsbCI6IiMxYTFhMmUifV19">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="那些百度搜不到的文案">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#0f0f1a;color:#eee;line-height:1.8}
+.cover{padding:60px 20px 40px;text-align:center;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);animation:fadeIn 1s ease}
+.cover h1{font-size:32px;letter-spacing:4px;background:linear-gradient(90deg,#e94560,#f4a261,#e94560);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:glow 2s ease-in-out infinite}
+.cover p{margin-top:12px;color:#9aa;font-size:15px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 8px rgba(233,69,96,.4))}50%{filter:drop-shadow(0 0 16px rgba(244,162,97,.6))}}
+.cat-nav{position:sticky;top:0;background:rgba(22,33,62,.95);backdrop-filter:blur(10px);padding:10px;display:flex;gap:8px;overflow-x:auto;z-index:5;-ms-overflow-style:none;scrollbar-width:none}
+.cat-nav::-webkit-scrollbar{display:none}
+.cat-nav a{color:#ccc;white-space:nowrap;font-size:13px;text-decoration:none;padding:5px 12px;background:#222;border-radius:20px;transition:.2s}
+.cat-nav a:active{background:#e94560;color:#fff}
+.chapter{padding:30px 16px 20px;border-bottom:1px solid #1a1a2e}
+.chapter h2{font-size:22px;margin-bottom:18px;text-align:center;padding:10px 0;border-radius:12px;background:rgba(255,255,255,.03)}
+.item{padding:12px 14px;margin:8px 0;background:#16162a;border-radius:10px;font-size:15px;transition:.2s;cursor:pointer;border-left:3px solid transparent}
+.item:active{border-left-color:inherit;background:#1e1e3a}
+.footer{padding:28px 18px 36px;text-align:center;font-size:12px;color:#666;background:#0a0a18;line-height:2}
+.footer span{color:#888}
+#bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#e94560,#f4a261);width:0;z-index:9;transition:width .1s}
+#top{position:fixed;right:14px;bottom:22px;background:linear-gradient(135deg,#e94560,#f4a261);color:#fff;border:none;border-radius:50%;width:46px;height:46px;font-size:20px;display:none;z-index:9;box-shadow:0 4px 14px rgba(233,69,96,.4);cursor:pointer}
+#search-bar{position:sticky;top:46px;background:#0f0f1a;padding:8px 16px;z-index:4;display:none}
+#search-bar input{width:100%;padding:8px 14px;border-radius:20px;border:1px solid #333;background:#16162a;color:#eee;font-size:14px;outline:none}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div class="cover" id="top-anchor">
+  <h1>那些百度搜不到的文案</h1>
+  <p>一字博 · 马文博发行</p>
+</div>
+<div class="cat-nav" id="nav"></div>
+<div id="search-bar"><input id="search-input" placeholder="搜索文案..."></div>
+<main id="main"></main>
+<div class="footer">
+  <span>原创作者：马文博</span> ｜ <span>代言人：马文博</span> ｜ <span>发行人：马文博</span><br>
+  <span>监督师：梁诗涵</span> ｜ <span>2026年8月16日</span>
+</div>
+<button id="top" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const cats=[
+ {n:"伤感文案",c:"#e94560",emoji:"💔"},
+ {n:"幸福文案",c:"#f4a261",emoji:"✨"},
+ {n:"Emo文案",c:"#9b5de5",emoji:"🌧️"},
+ {n:"深夜文案",c:"#48cae4",emoji:"🌙"},
+ {n:"离别文案",c:"#ef476f",emoji:"🥀"},
+ {n:"励志文案",c:"#06d6a0",emoji:"🔥"},
+ {n:"搞笑文案",c:"#ffd166",emoji:"😂"},
+ {n:"爱情文案",c:"#ff70a6",emoji:"💕"},
+ {n:"孤独文案",c:"#7b2cbf",emoji:"🌫️"},
+ {n:"治愈文案",c:"#2ec4b6",emoji:"🩹"},
+ {n:"青春文案",c:"#ff9f1c",emoji:"🎓"},
+ {n:"友情文案",c:"#3a86ff",emoji:"🤝"},
+ {n:"思念文案",c:"#fb5607",emoji:"🕊️"},
+ {n:"职场文案",c:"#8338ec",emoji:"💼"},
+ {n:"生活文案",c:"#06d6a0",emoji:"🏠"},
+ {n:"旅行文案",c:"#118ab2",emoji:"🗺️"},
+ {n:"美食文案",c:"#f15bb5",emoji:"🍜"},
+ {n:"雨天文案",c:"#577590",emoji:"☔"},
+ {n:"日落文案",c:"#ff6d00",emoji:"🌅"},
+ {n:"自我文案",c:"#7209b7",emoji:"🪞"}
+];
+
+const allItems=[];
+const sampleTexts=[
+ "有些话没说出口，就成了永远。","后来啊，连难过都变得很安静。","我把心事折成纸船，漂去了没人知道的地方。","幸福不是拥有多少，而是计较得少。","傍晚的风，替我说了晚安。","我也曾以为，真心能换真心。","emo了，今天的天空也是灰的。","凌晨三点的城市，只有我和路灯醒着。","有些人注定是过客，却成了心口的朱砂。","别回头，身后是万丈深渊。","今天也是元气满满的一天呢（假的）。","爱是常觉亏欠，也是常觉亏欠。","一个人吃饭、一个人看电影、一个人也挺好。","时间会愈合所有伤口，也会冲淡所有深情。","青春是一本太仓促的书，我们含着泪一读再读。","真正的朋友是，你不说她也懂。","想你了，但没告诉你。","职场没有朋友，只有利益。","生活不止眼前的苟且，还有明天的苟且。","出发永远比向往有意义。","人间烟火气，最抚凡人心。","下雨天最适合睡觉和想念。","日落是免费的，但也很浪漫。","你首先是你自己，然后才是别人的谁。","那些百度搜不到的文案，都在这里。"
+];
+
+const nav=document.getElementById('nav'),main=document.getElementById('main');
+cats.forEach((cat,i)=>{
+  const a=document.createElement('a');a.href='#ch'+i;a.textContent=cat.emoji+' '+cat.n;nav.appendChild(a);
+  const sec=document.createElement('section');sec.className='chapter';sec.id='ch'+i;
+  const h2=document.createElement('h2');h2.style.color=cat.c;h2.innerHTML=cat.emoji+' '+cat.n;sec.appendChild(h2);
+  for(let j=0;j<35;j++){
+    const d=document.createElement('div');d.className='item';
+    const text=sampleTexts[(i*7+j)%sampleTexts.length];
+    d.textContent=(i*35+j+1)+'. '+text;
+    d.style.borderLeftColor=cat.c;
+    d.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(text);d.style.background='#0f3a2e';setTimeout(()=>d.style.background='#16162a',600)};
+    sec.appendChild(d);allItems.push(d);
+  }
+  main.appendChild(sec);
+});
+
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  document.getElementById('bar').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+  document.getElementById('top').style.display=h.scrollTop>500?'block':'none';
+});
+
+document.getElementById('search-input').oninput=function(){
+  const q=this.value.toLowerCase();
+  allItems.forEach(item=>{item.style.display=q&&!item.textContent.toLowerCase().includes(q)?'none':''});
+};
+</script>
+</body>
+</html>
